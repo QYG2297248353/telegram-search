@@ -1,6 +1,5 @@
 import { Jieba } from '@node-rs/jieba'
 import { useLogger } from '@unbird/logg'
-import { isBrowser } from '@unbird/logg/utils'
 
 let _jieba: Jieba | undefined
 
@@ -9,15 +8,15 @@ export async function ensureJieba(): Promise<Jieba | undefined> {
 
   if (!_jieba) {
     try {
-      if (!isBrowser()) {
-        const { loadDict } = await import('./jieba.dict')
+      // if (!isBrowser()) {
+      //   const { loadDict } = await import('./jieba.dict')
 
-        const dictBuffer = await loadDict()
-        _jieba = Jieba.withDict(dictBuffer)
-      }
-      else {
-        _jieba = new Jieba()
-      }
+      //   const dictBuffer = await loadDict()
+      //   _jieba = Jieba.withDict(dictBuffer)
+      // }
+      // else {
+      _jieba = new Jieba()
+      // }
 
       logger.log('Jieba initialized successfully')
     }

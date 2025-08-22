@@ -1,33 +1,14 @@
+import type { useLogger } from '@unbird/logg'
 import type { CrossWSOptions } from 'listhen'
 
 import process from 'node:process'
 
 import { flags, parseEnvFlags } from '@tg-search/common'
-import { initConfig } from '@tg-search/common/node'
-import { initDrizzle } from '@tg-search/core'
-import { initLogger, useLogger } from '@unbird/logg'
+import { initDB } from '@tg-search/core'
 import { createApp, toNodeListener } from 'h3'
 import { listen } from 'listhen'
 
 import { setupWsRoutes } from './ws/routes'
-
-async function initCore(): Promise<ReturnType<typeof useLogger>> {
-  parseEnvFlags(process.env as Record<string, string>)
-  initLogger()
-  const logger = useLogger()
-  const config = await initConfig()
-
-  try {
-    await initDrizzle(logger, config)
-    logger.log('Database initialized successfully')
-  }
-  catch (error) {
-    logger.withError(error).error('Failed to initialize services')
-    process.exit(1)
-  }
-
-  return logger
-}
 
 function setupErrorHandlers(logger: ReturnType<typeof useLogger>): void {
   // TODO: fix type
@@ -95,7 +76,9 @@ function configureServer(logger: ReturnType<typeof useLogger>) {
 }
 
 async function bootstrap() {
-  const logger = await initCore()
+  parseEnvFlags(process.env as Record<string, string>)
+  const logger = await initDB()
+
   setupErrorHandlers(logger)
 
   const app = configureServer(logger)

@@ -6,9 +6,9 @@ import type { WsEventToClientData, WsMessageToClient, WsMessageToServer } from '
 import process from 'node:process'
 
 import { parseEnvFlags } from '@tg-search/common'
-import { initConfig, useConfig } from '@tg-search/common/node'
-import { createCoreInstance, initDrizzle } from '@tg-search/core'
-import { initLogger, useLogger } from '@unbird/logg'
+import { useConfig } from '@tg-search/common/node'
+import { createCoreInstance, initDB } from '@tg-search/core'
+import { useLogger } from '@unbird/logg'
 import { ipcMain } from 'electron/main'
 
 import { createWsMessage } from './ws-event'
@@ -18,24 +18,6 @@ export interface ClientState {
 
   isConnected: boolean
   phoneNumber?: string
-}
-
-async function initCore(): Promise<ReturnType<typeof useLogger>> {
-  parseEnvFlags(process.env as Record<string, string>)
-  initLogger()
-  const logger = useLogger()
-  const config = await initConfig()
-
-  try {
-    await initDrizzle(logger, config)
-    logger.log('Database initialized successfully')
-  }
-  catch (error) {
-    logger.withError(error).error('Failed to initialize services')
-    process.exit(1)
-  }
-
-  return logger
 }
 
 function setupErrorHandlers(logger: ReturnType<typeof useLogger>): void {
@@ -49,7 +31,8 @@ function setupErrorHandlers(logger: ReturnType<typeof useLogger>): void {
 }
 
 export async function bootstrap() {
-  const logger = await initCore()
+  parseEnvFlags(process.env as Record<string, string>)
+  const logger = await initDB()
   setupErrorHandlers(logger)
 }
 
