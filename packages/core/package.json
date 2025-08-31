@@ -36,13 +36,15 @@
     "file-type": "^21.0.0",
     "pathe": "^2.0.3",
     "postgres": "^3.4.7",
-    "telegram": "^2.26.22",
+    "telegram": "^2.26.21",
     "uuid": "^11.1.0",
     "valibot": "^1.1.0"
   },
   "devDependencies": {
     "@proj-airi/unplugin-drizzle-orm-migrations": "^0.1.2",
     "@types/pg": "^8.15.5",
-    "tsdown": "^0.14.1"
+    "tsdown": "^0.14.1",
+    "vite-plugin-node-polyfills": "^0.24.0",
+    "web-streams-polyfill": "^4.2.0"
   }
 }

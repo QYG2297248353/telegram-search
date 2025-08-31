@@ -1,6 +1,7 @@
 import type { ClientRegisterEventHandler } from '.'
 
-import { useWebsocketStore } from '../stores/useWebsocket'
+// import { useWebsocketStore } from '../stores/useWebsocket'
+import { useCoreBridgeWebsocketStore as useWebsocketStore } from '../stores/useCoreBridgeWebsocket'
 
 export function registerEntityEventHandlers(
   registerEventHandler: ClientRegisterEventHandler,

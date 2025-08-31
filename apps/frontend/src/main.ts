@@ -1,6 +1,5 @@
 import { autoAnimatePlugin } from '@formkit/auto-animate/vue'
 import { VueQueryPlugin } from '@tanstack/vue-query'
-import { createCoreInstance } from '@tg-search/core'
 import { App, en, zhCN } from '@tg-search/stage-ui'
 import { createPinia } from 'pinia'
 import { setupLayouts } from 'virtual:generated-layouts'
@@ -8,8 +7,6 @@ import { createApp } from 'vue'
 import { createI18n } from 'vue-i18n'
 import { createRouter, createWebHistory } from 'vue-router'
 import { routes as generatedRoutes } from 'vue-router/auto-routes'
-
-import { generateDefaultConfig } from '../../../packages/common/src/browser'
 
 import '@unocss/reset/tailwind.css'
 import 'uno.css'
@@ -24,7 +21,6 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
 })
 
-const _core = createCoreInstance(generateDefaultConfig())
 const i18n = createI18n({
   legacy: false,
   locale: 'en',

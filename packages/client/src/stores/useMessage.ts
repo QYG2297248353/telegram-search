@@ -5,9 +5,10 @@ import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 
 import { MessageWindow } from '../composables/useMessageWindow'
+// import { useWebsocketStore } from './useWebsocket'
+import { useCoreBridgeWebsocketStore as useWebsocketStore } from '../stores/useCoreBridgeWebsocket'
 import { createMediaBlob } from '../utils/blob'
 import { determineMessageDirection } from '../utils/message'
-import { useWebsocketStore } from './useWebsocket'
 
 function createContextWithTimeout(timeout: number) {
   return new Promise((_, reject) =>

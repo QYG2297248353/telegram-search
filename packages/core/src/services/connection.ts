@@ -1,7 +1,7 @@
 import type { ProxyConfig } from '@tg-search/common'
 import type { Result } from '@unbird/result'
 import type { ProxyInterface } from 'telegram/network/connection/TCPMTProxy'
-import type { StringSession } from 'telegram/sessions'
+import { StringSession } from 'telegram/sessions'
 
 import type { CoreContext } from '../context'
 
@@ -75,6 +75,7 @@ export function createConnectionService(ctx: CoreContext) {
         logger.withFields({ proxy }).verbose('Using proxy')
       }
 
+      logger.withFields({ session, apiId: options.apiId, apiHash: options.apiHash }).verbose('Initializing Telegram client')
       const client = new TelegramClient(
         session,
         options.apiId,
@@ -82,10 +83,18 @@ export function createConnectionService(ctx: CoreContext) {
         {
           connectionRetries: 3,
           retryDelay: 10000,
-          useWSS: proxy ? false : undefined,
-          proxy,
+          // useWSS: true,//proxy ? false : undefined,
+          // proxy,
+          // deviceModel: 'Browser',
+          // systemVersion: 'Web',
+          // appVersion:"1.0.0",
+          // langCode: 'en',
+          // testServers:true
         },
       )
+
+      logger.withFields({ client }).verbose('Telegram client initialized')
+
 
       return Ok(client)
     }

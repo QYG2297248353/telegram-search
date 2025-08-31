@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import type { CoreRetrievalMessages } from '@tg-search/core/types'
 
-import { useWebsocketStore } from '@tg-search/client'
+// import { useWebsocketStore } from '@tg-search/client'
+import { useCoreBridgeWebsocketStore as useWebsocketStore } from '@tg-search/client'
 import { useDebounce } from '@vueuse/core'
 import { ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'

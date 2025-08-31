@@ -3,8 +3,9 @@ import type { CoreUserEntity } from '@tg-search/core'
 import { defineStore } from 'pinia'
 import { computed, ref, watch } from 'vue'
 
+// import { useWebsocketStore } from './useWebsocket'
+import { useCoreBridgeWebsocketStore as useWebsocketStore } from '../stores/useCoreBridgeWebsocket'
 import { useChatStore } from './useChat'
-import { useWebsocketStore } from './useWebsocket'
 
 export interface SessionContext {
   phoneNumber?: string

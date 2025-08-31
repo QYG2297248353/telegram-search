@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useSettingsStore, useWebsocketStore } from '@tg-search/client'
+import { useSettingsStore, useCoreBridgeWebsocketStore as useWebsocketStore } from '@tg-search/client'
 import { storeToRefs } from 'pinia'
 import { onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -39,6 +39,7 @@ onMounted(() => {
     <div class="flex items-center gap-2">
       <span class="text-lg text-gray-900 font-medium dark:text-gray-100">{{ t('settings.settings') }}</span>
     </div>
+    <div class="h-20"></div>
 
     <div class="ml-auto flex items-center gap-2">
       <Button
