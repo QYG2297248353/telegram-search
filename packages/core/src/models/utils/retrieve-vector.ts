@@ -1,9 +1,10 @@
+import type { Config } from '@tg-search/common'
 import type { CorePagination } from '@tg-search/common/utils/pagination'
 
 import type { DBRetrievalMessages } from './message'
 
 import { EmbeddingDimension } from '@tg-search/common'
-import { useConfig } from '@tg-search/common/node'
+import { isBrowser } from '@unbird/logg/utils'
 import { and, desc, eq, gt, sql } from 'drizzle-orm'
 
 import { withDb } from '../../db'
@@ -11,6 +12,15 @@ import { chatMessagesTable } from '../../schemas/chat_messages'
 import { getSimilaritySql } from './similarity'
 
 export async function retrieveVector(chatId: string | undefined, embedding: number[], pagination?: CorePagination): Promise<DBRetrievalMessages[]> {
+  let useConfig: () => Config
+  if (isBrowser()) {
+    const { useConfig: useConfigBrowser } = await import('@tg-search/common/browser')
+    useConfig = useConfigBrowser
+  }
+  else {
+    const { useConfig: useConfigNode } = await import('@tg-search/common/node')
+    useConfig = useConfigNode
+  }
   const similarity = getSimilaritySql(
     useConfig().api.embedding.dimension || EmbeddingDimension.DIMENSION_1536,
     embedding,

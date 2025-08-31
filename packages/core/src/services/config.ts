@@ -3,7 +3,7 @@ import type { Config } from '@tg-search/common'
 import type { CoreContext } from '../context'
 
 import { configSchema } from '@tg-search/common'
-import { updateConfig as updateConfigToFile, useConfig } from '@tg-search/common/node'
+import { isBrowser } from '@unbird/logg/utils'
 import { safeParse } from 'valibot'
 
 export interface ConfigEventToCore {
@@ -23,6 +23,15 @@ export function createConfigService(ctx: CoreContext) {
   const { emitter } = ctx
 
   async function fetchConfig() {
+    let useConfig: () => Config
+    if (isBrowser()) {
+      const { useConfig: useConfigBrowser } = await import('@tg-search/common/browser')
+      useConfig = useConfigBrowser
+    }
+    else {
+      const { useConfig: useConfigNode } = await import('@tg-search/common/node')
+      useConfig = useConfigNode
+    }
     const config = useConfig()
 
     emitter.emit('config:data', { config })
@@ -35,7 +44,14 @@ export function createConfigService(ctx: CoreContext) {
       throw new Error('Invalid config')
     }
 
-    updateConfigToFile(validatedConfig.output)
+    if (isBrowser()) {
+      const { updateConfig: updateConfigBrowser } = await import('@tg-search/common/browser')
+      updateConfigBrowser(validatedConfig.output)
+    }
+    else {
+      const { updateConfig: updateConfigNode } = await import('@tg-search/common/node')
+      updateConfigNode(validatedConfig.output)
+    }
 
     emitter.emit('config:data', { config: validatedConfig.output })
   }

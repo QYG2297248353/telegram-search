@@ -45,6 +45,26 @@ export default defineConfig({
     UnoCSS(),
   ],
 
+  // 添加 Node.js polyfill 支持
+  define: {
+    'global': 'globalThis',
+    'process.env': {},
+  },
+
+  resolve: {
+    alias: {
+      // 为 Node.js 模块提供浏览器兼容的替代
+      util: 'util',
+      buffer: 'buffer',
+      process: 'process/browser',
+    },
+  },
+
+  optimizeDeps: {
+    include: ['buffer', 'process'],
+    exclude: ['@electric-sql/pglite'], // 排除有问题的包
+  },
+
   // Proxy API requests to local development server
   server: {
     proxy: {

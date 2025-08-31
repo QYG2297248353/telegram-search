@@ -1,12 +1,22 @@
+import type { Config } from '@tg-search/common'
 import type { EmbedManyResult } from '@xsai/embed'
 
 import { EmbeddingProvider } from '@tg-search/common'
-import { useConfig } from '@tg-search/common/node'
+import { isBrowser } from '@unbird/logg/utils'
 import { Ok } from '@unbird/result'
 import { createOllama } from '@xsai-ext/providers-local'
 import { embedMany } from '@xsai/embed'
 
 export async function embedContents(contents: string[]) {
+  let useConfig: () => Config
+  if (isBrowser()) {
+    const { useConfig: useConfigBrowser } = await import('@tg-search/common/browser')
+    useConfig = useConfigBrowser
+  }
+  else {
+    const { useConfig: useConfigNode } = await import('@tg-search/common/node')
+    useConfig = useConfigNode
+  }
   const embeddingConfig = useConfig().api.embedding
 
   let embeddings: EmbedManyResult

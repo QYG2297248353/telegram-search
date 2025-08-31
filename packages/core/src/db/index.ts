@@ -6,7 +6,7 @@ import { vector } from '@electric-sql/pglite/vector'
 import { migrate as migratePg } from '@proj-airi/drizzle-orm-browser-migrator/pg'
 import { migrate as migratePGlite } from '@proj-airi/drizzle-orm-browser-migrator/pglite'
 import { DatabaseType, flags } from '@tg-search/common'
-import { getDatabaseDSN, getDatabaseFilePath } from '@tg-search/common/node'
+import { isBrowser } from '@unbird/logg/utils'
 import { Err, Ok } from '@unbird/result'
 import { sql } from 'drizzle-orm'
 import { drizzle as drizzlePGlite } from 'drizzle-orm/pglite'
@@ -50,6 +50,7 @@ export async function initDrizzle(logger: Logger, config: Config, dbPath?: strin
   switch (dbType) {
     case DatabaseType.POSTGRES: {
       // Initialize PostgreSQL database
+      const { getDatabaseDSN } = await import('@tg-search/common/node')
       const connectionString = getDatabaseDSN(config)
       logger.log(`Connecting to PostgreSQL database: ${connectionString}`)
 
@@ -66,7 +67,14 @@ export async function initDrizzle(logger: Logger, config: Config, dbPath?: strin
 
     case DatabaseType.PGLITE: {
       // Initialize PGlite database
-      const dbFilePath = dbPath || getDatabaseFilePath(config)
+      let dbFilePath: string
+      if (isBrowser()) {
+        const { getDatabaseFilePath } = await import('@tg-search/common/node')
+        dbFilePath = getDatabaseFilePath(config)
+      }
+      else {
+        dbFilePath = dbPath || 'idx://pglite'
+      }
       logger.log(`Using PGlite database file: ${dbFilePath}`)
 
       try {
