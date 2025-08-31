@@ -1,18 +1,18 @@
 import type { Config } from '@tg-search/common'
 import type { Logger } from '@unbird/logg'
 
-import { PGlite } from '@electric-sql/pglite'
+import { IdbFs, PGlite } from '@electric-sql/pglite'
 import { vector } from '@electric-sql/pglite/vector'
 import { migrate as migratePg } from '@proj-airi/drizzle-orm-browser-migrator/pg'
 import { migrate as migratePGlite } from '@proj-airi/drizzle-orm-browser-migrator/pglite'
 import { DatabaseType, flags } from '@tg-search/common'
-import { isBrowser } from '@unbird/logg/utils'
 import { Err, Ok } from '@unbird/result'
 import { sql } from 'drizzle-orm'
 import { drizzle as drizzlePGlite } from 'drizzle-orm/pglite'
 import { drizzle as drizzlePg } from 'drizzle-orm/postgres-js'
 import postgres from 'postgres'
 import migrations from 'virtual:drizzle-migrations.sql'
+import { isBrowser } from '@unbird/logg/utils'
 
 type PostgresDB = ReturnType<typeof drizzlePg>
 type PgliteDB = ReturnType<typeof drizzlePGlite>
@@ -43,7 +43,7 @@ export async function initDrizzle(logger: Logger, config: Config, dbPath?: strin
   logger.log('Initializing database...')
 
   // Get configuration
-  const dbType = config.database.type || DatabaseType.POSTGRES
+  const dbType = config.database.type || DatabaseType.PGLITE
 
   logger.log(`Using database type: ${dbType}`)
 
@@ -68,19 +68,20 @@ export async function initDrizzle(logger: Logger, config: Config, dbPath?: strin
     case DatabaseType.PGLITE: {
       // Initialize PGlite database
       let dbFilePath: string
-      if (isBrowser()) {
+      if(isBrowser()) {
+        dbFilePath = dbPath || 'idx://pglite'
+      } else {
         const { getDatabaseFilePath } = await import('@tg-search/common/node')
         dbFilePath = getDatabaseFilePath(config)
       }
-      else {
-        dbFilePath = dbPath || 'idx://pglite'
-      }
+      
       logger.log(`Using PGlite database file: ${dbFilePath}`)
 
       try {
         // Initialize PGlite instance
-        const pg = new PGlite(dbFilePath, {
+        const pg = new PGlite({
           extensions: { vector },
+          fs:new IdbFs("pglite")
         })
 
         // Create Drizzle instance

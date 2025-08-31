@@ -6,7 +6,7 @@ import type { SessionContext } from './useAuth'
 import type { ClientSendEventFn } from './useWebsocket'
 
 import { initConfig, useConfig } from '@tg-search/common/browser'
-import { createCoreInstance } from '@tg-search/core'
+import { createCoreInstance, initDrizzle } from '@tg-search/core'
 import { useLogger } from '@unbird/logg'
 import { useLocalStorage } from '@vueuse/core'
 import defu from 'defu'
@@ -120,6 +120,7 @@ export const useCoreBridgeWebsocketStore = defineStore('corebridge_websocket', (
   }
 
   onMounted(() => {
+    initDrizzle(logger, config)
     sendWsEvent({ type: 'server:connected', data: { sessionId: storageActiveSessionId.value, connected: false } })
   })
 
