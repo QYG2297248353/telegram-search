@@ -61,15 +61,24 @@ export function createMediaResolver(ctx: CoreContext): MessageResolver {
             }
 
             const mediaFetched = await ctx.getClient().downloadMedia(media.apiMedia as Api.TypeMessageMedia)
-            const byte = mediaFetched instanceof Buffer ? mediaFetched : undefined
-            return {
+            let byte : Buffer | undefined = undefined
+            if (mediaFetched instanceof Buffer) {
+              byte = mediaFetched
+            } else if (mediaFetched instanceof Uint8Array) {
+              byte = Buffer.from(mediaFetched)          
+            }else{
+              console.log('mediaFetched type', typeof mediaFetched);
+            }
+            const mimeType = byte ? (await fileTypeFromBuffer(byte))?.mime : undefined
+            const result = {
               messageUUID: message.uuid,
               apiMedia: media.apiMedia,
-              byte,
+              byte: byte,
               type: media.type,
               platformId: media.platformId,
-              mimeType: byte ? (await fileTypeFromBuffer(byte))?.mime : undefined,
+              mimeType: mimeType,
             } satisfies CoreMessageMediaFromServer
+            return result
           }),
         )
 

@@ -95,6 +95,8 @@ export async function recordMessagesWithMedia(messages: CoreMessage[]): Promise<
     }) satisfies CoreMessageMediaSticker[]
 
   if (allPhotoMedia.length > 0) {
+    console.log('recordPhotos', allPhotoMedia[0]);
+    
     (await recordPhotos(allPhotoMedia))?.expect('Failed to record photos')
   }
   if (allStickerMedia.length > 0) {

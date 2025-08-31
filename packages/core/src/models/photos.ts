@@ -53,6 +53,7 @@ export async function recordPhotos(media: CoreMessageMediaPhoto[]) {
     })
     .returning(),
   )
+
 }
 
 export async function findPhotosByMessageId(messageUUID: string) {
