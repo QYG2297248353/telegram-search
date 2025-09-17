@@ -33,8 +33,6 @@ async function updateConfig() {
 onMounted(() => {
   websocketStore.sendEvent('config:fetch')
 })
-
-
 </script>
 
 <template>
