@@ -21,6 +21,11 @@ export interface VirtualListState {
   measuredHeights: Map<string | number, number>
 }
 
+interface ScrollAnchor {
+  anchorIndex: number
+  offset: number
+}
+
 export function useVirtualList(
   items: Ref<VirtualListItem[]>,
   options: VirtualListOptions,
@@ -42,6 +47,8 @@ export function useVirtualList(
   })
 
   let scrollTimer: ReturnType<typeof setTimeout> | null = null
+  let pendingAnchor: ScrollAnchor | null = null
+  let restoreScheduled = false
 
   // Calculate item positions and heights
   const itemPositions = computed(() => {
@@ -161,6 +168,45 @@ export function useVirtualList(
     return result
   })
 
+  function captureAnchor(): ScrollAnchor | null {
+    if (!containerRef.value || items.value.length === 0)
+      return null
+
+    const { visibleStart } = visibleRange.value
+    if (visibleStart < 0)
+      return null
+
+    const anchorIndex = Math.min(visibleStart, items.value.length - 1)
+    const position = itemPositions.value[anchorIndex]
+    if (!position)
+      return null
+
+    const currentScrollTop = containerRef.value.scrollTop
+
+    return {
+      anchorIndex,
+      offset: currentScrollTop - position.top,
+    }
+  }
+
+  function scheduleAnchorRestore(anchor: ScrollAnchor) {
+    pendingAnchor = anchor
+
+    if (restoreScheduled)
+      return
+
+    restoreScheduled = true
+    void nextTick().then(async () => {
+      restoreScheduled = false
+      if (!pendingAnchor)
+        return
+
+      const anchorToRestore = pendingAnchor
+      pendingAnchor = null
+      await restoreScrollPosition(anchorToRestore)
+    })
+  }
+
   // Handle scroll events
   function handleScroll(event: Event) {
     const target = event.target as HTMLElement
@@ -180,9 +226,26 @@ export function useVirtualList(
 
   // Measure item height after render
   function measureItem(id: string | number, height: number) {
-    if (height > 0 && height !== state.measuredHeights.get(id)) {
-      state.measuredHeights.set(id, height)
-    }
+    if (height <= 0)
+      return
+
+    const previousHeight = state.measuredHeights.get(id)
+    if (previousHeight === height)
+      return
+
+    const anchor = captureAnchor()
+
+    state.measuredHeights.set(id, height)
+
+    if (!anchor)
+      return
+
+    const measuredIndex = items.value.findIndex(item => item.id === id)
+    if (measuredIndex === -1)
+      return
+
+    if (measuredIndex <= anchor.anchorIndex)
+      scheduleAnchorRestore(anchor)
   }
 
   // Scroll to specific item
