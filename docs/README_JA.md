@@ -37,29 +37,8 @@
 
 ## 🚀 クイックスタート
 
-1. リポジトリをクローン:
-
 ```bash
-git clone https://github.com/GramSearch/telegram-search.git
-cd telegram-search
-
-# リリースブランチに切り替え
-git switch release
-```
-
-2. 設定を構成:
-
-```bash
-# 必要に応じて config/config.yaml の設定を変更します。
-# 設定の database.host の値を "pgvector" に変更してください。
-
-cp config/config.example.yaml config/config.yaml
-```
-
-3. サービスを起動:
-
-```bash
-docker compose up -d
+docker run ghcr.io/groupultra/telegram-search:latest -d
 ```
 
 http://localhost:3333 にアクセスして検索インターフェースを開きます。
@@ -93,6 +72,10 @@ pnpm install
 ```
 
 3. 環境を設定
+
+```bash
+cp config/config.example.yaml config/config.yaml
+```
 
 4. データベースコンテナを起動:
 

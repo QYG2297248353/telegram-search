@@ -38,29 +38,8 @@ Visit: https://search.lingogram.app
 
 ### Docker
 
-1. Clone the repository:
-
 ```bash
-git clone https://github.com/GramSearch/telegram-search.git
-cd telegram-search
-
-# Switch to release branch
-git switch release
-```
-
-2. Configure settings:
-
-```bash
-# Modify settings in config/config.yaml as needed.
-# Make sure to change database.host value to "pgvector" in the configuration.
-
-cp config/config.example.yaml config/config.yaml
-```
-
-3. Start services:
-
-```bash
-docker compose up -d
+docker run ghcr.io/groupultra/telegram-search:latest -d
 ```
 
 Access http://localhost:3333 to open the search interface.
@@ -94,6 +73,10 @@ pnpm install
 ```
 
 3. Configure environment
+
+```bash
+cp config/config.example.yaml config/config.yaml
+```
 
 4. Start database container:
 

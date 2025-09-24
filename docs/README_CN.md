@@ -38,29 +38,8 @@
 
 ## 🚀 快速开始
 
-1. 克隆仓库
-
 ```bash
-git clone https://github.com/GramSearch/telegram-search.git
-cd telegram-search
-
-# 切换到 release 分支
-git switch release
-```
-
-2. 修改配置文件
-
-```bash
-# 根据需要，修改 `config/config.yaml` 中的设置
-# 务必修改配置中的 `database.host` 的值为数据库容器的服务名称 "pgvector"
-
-cp config/config.example.yaml config/config.yaml
-```
-
-3. 启动服务
-
-```bash
-docker compose up -d
+docker run ghcr.io/groupultra/telegram-search:latest -d
 ```
 
 访问 `http://localhost:3333` 即可打开搜索界面。
@@ -94,6 +73,10 @@ pnpm install
 ```
 
 3. 修改配置文件
+
+```bash
+cp config/config.example.yaml config/config.yaml
+```
 
 4. 启动数据库容器：
 
