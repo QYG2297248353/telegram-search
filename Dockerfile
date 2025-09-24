@@ -10,6 +10,9 @@ COPY . .
 # Install dependencies
 RUN CI=true pnpm install --frozen-lockfile --ignore-scripts
 
+# Build web client
+ENTRYPOINT ["/bin/sh", "-c", "pnpm run web:build"]
+
 # ---------------------------------
 # --------- Runtime Stage ---------
 # ---------------------------------
