@@ -11,6 +11,7 @@ on:
 
 jobs:
   lint:
+    name: Lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -26,7 +27,8 @@ jobs:
       - name: Lint
         run: pnpm run lint
 
-  build:
+  build-test:
+    name: Build and Test
     strategy:
       matrix:
         os: [ubuntu-latest]
@@ -46,6 +48,7 @@ jobs:
         run: pnpm run build:packages
 
   typecheck:
+    name: Typecheck
     strategy:
       matrix:
         os: [ubuntu-latest]
@@ -65,13 +68,13 @@ jobs:
         run: pnpm run typecheck
 
   check-provenance:
+    name: Check Provenance
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
         with:
           fetch-depth: 0
-      - name: Check provenance downgrades
-        uses: danielroe/provenance-action@main
+      - uses: danielroe/provenance-action@main
         id: check
         with:
           fail-on-provenance-change: true # optional, default: false
