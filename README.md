@@ -112,10 +112,10 @@ pnpm run db:migrate
 
 ```bash
 # Start backend
-pnpm run dev:server
+pnpm run server:dev
 
 # Start frontend
-pnpm run dev:frontend
+pnpm run web:dev
 ```
 
 ## 🏗️ Architecture

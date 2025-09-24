@@ -112,10 +112,10 @@ pnpm run db:migrate
 
 ```bash
 # 启动后端服务
-pnpm run dev:server
+pnpm run server:dev
 
 # 启动前端界面
-pnpm run dev:frontend
+pnpm run web:dev
 ```
 
 ## 🏗️ 系统架构

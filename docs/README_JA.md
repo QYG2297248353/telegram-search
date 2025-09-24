@@ -111,10 +111,10 @@ pnpm run db:migrate
 
 ```bash
 # バックエンドを起動
-pnpm run dev:server
+pnpm run server:dev
 
 # フロントエンドを起動
-pnpm run dev:frontend
+pnpm run web:dev
 ```
 
 ## 🏗️ アーキテクチャ
