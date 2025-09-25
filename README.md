@@ -36,13 +36,28 @@ Visit: https://search.lingogram.app
 
 ## 🚀 Quick Start
 
-### Docker
+### Start with Docker Image
+
+1. Run docker image
 
 ```bash
 docker run ghcr.io/groupultra/telegram-search:latest -d
 ```
 
-Access http://localhost:3333 to open the search interface.
+2. Access `http://localhost:3333` to open the search interface.
+
+
+### Start with Docker Compose
+
+1. Clone repository
+
+2. Run docker compose to start all services including database
+
+```bash
+docker compose up -d
+```
+
+3. Access `http://localhost:3333` to open the search interface.
 
 ## 💻 Development Guide
 

@@ -37,11 +37,27 @@
 
 ## 🚀 クイックスタート
 
+### 使用 Docker イメージ
+
+1. Docker イメージを実行
+
 ```bash
 docker run ghcr.io/groupultra/telegram-search:latest -d
 ```
 
-http://localhost:3333 にアクセスして検索インターフェースを開きます。
+2. http://localhost:3333 にアクセスして検索インターフェースを開きます。
+
+### 使用 Docker Compose
+
+1. リポジトリをクローン
+
+2. docker compose を実行してすべてのサービスを起動します。
+
+```bash
+docker compose up -d
+```
+
+3. http://localhost:3333 にアクセスして検索インターフェースを開きます。
 
 ## 💻 開発ガイド
 
