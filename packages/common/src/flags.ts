@@ -112,17 +112,17 @@ export function parseEnvFlags(env: Record<string, string | undefined>): RuntimeF
   // Proxy configuration from environment variables
   assignIfPresent(result, 'proxyIp', readEnvValue('PROXY_IP', env))
   const proxyPortValue = readIntegerEnv('PROXY_PORT', env)
-  if (proxyPortValue) {
+  if (proxyPortValue !== undefined) {
     result.proxyPort = proxyPortValue
   }
   result.proxyMTProxy = readBooleanEnv('PROXY_MT_PROXY', env)
   assignIfPresent(result, 'proxySecret', readEnvValue('PROXY_SECRET', env))
   const proxySocksTypeValue = readIntegerEnv('PROXY_SOCKS_TYPE', env)
-  if (proxySocksTypeValue) {
+  if (proxySocksTypeValue !== undefined) {
     result.proxySocksType = proxySocksTypeValue
   }
   const proxyTimeoutValue = readIntegerEnv('PROXY_TIMEOUT', env)
-  if (proxyTimeoutValue) {
+  if (proxyTimeoutValue !== undefined) {
     result.proxyTimeout = proxyTimeoutValue
   }
   assignIfPresent(result, 'proxyUsername', readEnvValue('PROXY_USERNAME', env))
