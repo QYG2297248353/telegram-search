@@ -1,4 +1,4 @@
-import type { Config, ProxyConfig } from './config-schema'
+import type { Config } from './config-schema'
 import type { RuntimeFlags } from './flags'
 
 import { useLogger } from '@unbird/logg'
@@ -83,7 +83,7 @@ function applyProxyOverrides(config: Config, flags?: RuntimeFlags): void {
     const currentProxy = currentTelegram.proxy || {}
 
     // Build the new proxy configuration
-    const newProxyConfig: Partial<ProxyConfig> = {
+    const newProxyConfig = {
       ...currentProxy,
       ...(flags!.proxyIp !== undefined && { ip: flags!.proxyIp }),
       ...(flags!.proxyPort !== undefined && { port: flags!.proxyPort }),
@@ -97,14 +97,14 @@ function applyProxyOverrides(config: Config, flags?: RuntimeFlags): void {
 
     // Only set the proxy configuration if it has actual values (not just defaults)
     const hasActualProxyConfig
-      = (newProxyConfig.ip && newProxyConfig.ip !== '')
-        || (newProxyConfig.port && newProxyConfig.port !== 0)
+      = (newProxyConfig.ip !== undefined && newProxyConfig.ip !== '')
+        || (newProxyConfig.port !== undefined && newProxyConfig.port !== 0)
         || newProxyConfig.MTProxy
-        || (newProxyConfig.secret && newProxyConfig.secret !== '')
-        || newProxyConfig.socksType
-        || newProxyConfig.timeout
-        || (newProxyConfig.username && newProxyConfig.username !== '')
-        || (newProxyConfig.password && newProxyConfig.password !== '')
+        || (newProxyConfig.secret !== undefined && newProxyConfig.secret !== '')
+        || newProxyConfig.socksType !== undefined
+        || newProxyConfig.timeout !== undefined
+        || (newProxyConfig.username !== undefined && newProxyConfig.username !== '')
+        || (newProxyConfig.password !== undefined && newProxyConfig.password !== '')
 
     if (hasActualProxyConfig) {
       config.api.telegram = {

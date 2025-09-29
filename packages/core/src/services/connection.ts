@@ -43,7 +43,7 @@ export function createConnectionService(ctx: CoreContext) {
 
     const getProxyInterface = (proxyConfig: ProxyConfig | undefined): ProxyInterface | undefined => {
       // Check if we have a valid proxy configuration
-      if (!proxyConfig || !proxyConfig.ip || proxyConfig.ip === '' || !proxyConfig.port || proxyConfig.port === 0) {
+      if (!proxyConfig || proxyConfig.ip === undefined || proxyConfig.ip === '' || proxyConfig.port === undefined || proxyConfig.port === 0) {
         return undefined
       }
 
