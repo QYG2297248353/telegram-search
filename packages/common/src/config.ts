@@ -1,4 +1,4 @@
-import type { Config } from './config-schema'
+import type { Config, ProxyConfig } from './config-schema'
 import type { RuntimeFlags } from './flags'
 
 import { useLogger } from '@unbird/logg'
@@ -63,6 +63,58 @@ function applyEmbeddingOverrides(config: Config, flags?: RuntimeFlags): void {
   }
 }
 
+function applyProxyOverrides(config: Config, flags?: RuntimeFlags): void {
+  // Check if any proxy flags are set
+  const hasProxyFlags = flags && (
+    flags.proxyIp !== undefined
+    || flags.proxyPort !== undefined
+    || flags.proxyMTProxy !== undefined
+    || flags.proxySecret !== undefined
+    || flags.proxySocksType !== undefined
+    || flags.proxyTimeout !== undefined
+    || flags.proxyUsername !== undefined
+    || flags.proxyPassword !== undefined
+  )
+
+  // Only apply proxy overrides if proxy flags are set
+  if (hasProxyFlags) {
+    config.api = config.api || {}
+    const currentTelegram = config.api.telegram || {}
+    const currentProxy = currentTelegram.proxy || {}
+
+    // Build the new proxy configuration
+    const newProxyConfig: Partial<ProxyConfig> = {
+      ...currentProxy,
+      ...(flags!.proxyIp !== undefined && { ip: flags!.proxyIp }),
+      ...(flags!.proxyPort !== undefined && { port: flags!.proxyPort }),
+      ...(flags!.proxyMTProxy !== undefined && { MTProxy: flags!.proxyMTProxy }),
+      ...(flags!.proxySecret !== undefined && { secret: flags!.proxySecret }),
+      ...(flags!.proxySocksType !== undefined && { socksType: flags!.proxySocksType }),
+      ...(flags!.proxyTimeout !== undefined && { timeout: flags!.proxyTimeout }),
+      ...(flags!.proxyUsername !== undefined && { username: flags!.proxyUsername }),
+      ...(flags!.proxyPassword !== undefined && { password: flags!.proxyPassword }),
+    }
+
+    // Only set the proxy configuration if it has actual values (not just defaults)
+    const hasActualProxyConfig
+      = (newProxyConfig.ip && newProxyConfig.ip !== '')
+        || (newProxyConfig.port && newProxyConfig.port !== 0)
+        || newProxyConfig.MTProxy
+        || (newProxyConfig.secret && newProxyConfig.secret !== '')
+        || newProxyConfig.socksType
+        || newProxyConfig.timeout
+        || (newProxyConfig.username && newProxyConfig.username !== '')
+        || (newProxyConfig.password && newProxyConfig.password !== '')
+
+    if (hasActualProxyConfig) {
+      config.api.telegram = {
+        ...currentTelegram,
+        proxy: newProxyConfig,
+      }
+    }
+  }
+}
+
 export async function initConfig(flags?: RuntimeFlags) {
   if (isBrowser()) {
     const configStorage = useLocalStorage(CONFIG_STORAGE_KEY, generateDefaultConfig())
@@ -115,6 +167,7 @@ function applyRuntimeOverrides(baseConfig: Config, flags?: RuntimeFlags): Config
   // Apply API overrides
   applyTelegramOverrides(runtimeConfig, flags)
   applyEmbeddingOverrides(runtimeConfig, flags)
+  applyProxyOverrides(runtimeConfig, flags)
 
   return runtimeConfig
 }

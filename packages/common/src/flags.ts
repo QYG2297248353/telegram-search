@@ -17,6 +17,16 @@ export interface RuntimeFlags {
   telegramApiId?: string
   telegramApiHash?: string
 
+  // Proxy configuration
+  proxyIp?: string
+  proxyPort?: number
+  proxyMTProxy?: boolean
+  proxySecret?: string
+  proxySocksType?: number
+  proxyTimeout?: number
+  proxyUsername?: string
+  proxyPassword?: string
+
   embeddingProvider?: EmbeddingProvider
   embeddingModel?: string
   embeddingDimension?: number
@@ -98,6 +108,25 @@ export function parseEnvFlags(env: Record<string, string | undefined>): RuntimeF
   assignIfPresent(result, 'dbUrl', readEnvValue('DATABASE_URL', env))
   assignIfPresent(result, 'telegramApiId', readEnvValue('TELEGRAM_API_ID', env))
   assignIfPresent(result, 'telegramApiHash', readEnvValue('TELEGRAM_API_HASH', env))
+
+  // Proxy configuration from environment variables
+  assignIfPresent(result, 'proxyIp', readEnvValue('PROXY_IP', env))
+  const proxyPortValue = readIntegerEnv('PROXY_PORT', env)
+  if (proxyPortValue) {
+    result.proxyPort = proxyPortValue
+  }
+  result.proxyMTProxy = readBooleanEnv('PROXY_MT_PROXY', env)
+  assignIfPresent(result, 'proxySecret', readEnvValue('PROXY_SECRET', env))
+  const proxySocksTypeValue = readIntegerEnv('PROXY_SOCKS_TYPE', env)
+  if (proxySocksTypeValue) {
+    result.proxySocksType = proxySocksTypeValue
+  }
+  const proxyTimeoutValue = readIntegerEnv('PROXY_TIMEOUT', env)
+  if (proxyTimeoutValue) {
+    result.proxyTimeout = proxyTimeoutValue
+  }
+  assignIfPresent(result, 'proxyUsername', readEnvValue('PROXY_USERNAME', env))
+  assignIfPresent(result, 'proxyPassword', readEnvValue('PROXY_PASSWORD', env))
 
   const embeddingProviderValue = readEnvValue('EMBEDDING_PROVIDER', env)
   if (embeddingProviderValue) {

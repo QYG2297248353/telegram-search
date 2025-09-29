@@ -19,6 +19,17 @@ api:
     apiHash: d524b414d21f4d37f08684c1df41ac9c
     receiveMessage: false
     # Optional proxy settings
+    # Proxy configuration can also be set via environment variables, which take precedence over config file settings.
+    # Environment variables:
+    # - PROXY_IP: Proxy host (IP or hostname)
+    # - PROXY_PORT: Proxy port
+    # - PROXY_MT_PROXY: Whether it's an MTProxy (true/false)
+    # - PROXY_SECRET: MTProxy secret (if using MTProxy)
+    # - PROXY_SOCKS_TYPE: SOCKS type (4 or 5, default is 5)
+    # - PROXY_TIMEOUT: Timeout (in seconds) for connection (default is 15)
+    # - PROXY_USERNAME: Username for proxy authentication (optional)
+    # - PROXY_PASSWORD: Password for proxy authentication (optional)
+    #
     # proxy:
     #   ip: ''            # Proxy host (IP or hostname)
     #   port: 0          # Proxy port
