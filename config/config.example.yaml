@@ -23,7 +23,7 @@ api:
     # Proxy configuration can be set via environment variables or config file settings.
     # Environment variables take precedence over config file settings.
     #
-    # RECOMMENDED: Use PROXY_URL environment variable for simplified proxy configuration
+    # Use PROXY_URL environment variable for simplified proxy configuration
     # Environment variable: PROXY_URL
     # Supported formats:
     # - socks4://username:password@host:port?timeout=15
@@ -32,7 +32,6 @@ api:
     # - mtproxy://secret@host:port?timeout=15
     #
     # proxy:
-    #   # RECOMMENDED: Use proxyUrl for simplified configuration
     #   proxyUrl: 'socks5://username:password@proxy.example.com:1080?timeout=15'
 
   # Embedding settings
