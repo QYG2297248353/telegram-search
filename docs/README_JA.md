@@ -76,14 +76,21 @@ docker run -d --name telegram-search \
 | `EMBEDDING_PROVIDER` | 任意 | 埋め込みプロバイダーを上書き（`openai` または `ollama`）。 |
 | `EMBEDDING_MODEL` | 任意 | 使用する埋め込みモデル名を上書き。 |
 | `EMBEDDING_DIMENSION` | 任意 | 埋め込みベクトルの次元数を上書き（`1536`、`1024`、`768` など）。 |
-| `PROXY_IP` | 任意 | プロキシホスト（IPまたはホスト名）。 |
-| `PROXY_PORT` | 任意 | プロキシポート。 |
-| `PROXY_MT_PROXY` | 任意 | MTProxyかどうか（`true`/`false`）。 |
-| `PROXY_SECRET` | 任意 | MTProxyのシークレット（MTProxyを使用する場合）。 |
-| `PROXY_SOCKS_TYPE` | 任意 | SOCKSタイプ（`4`または`5`、デフォルトは`5`）。 |
-| `PROXY_TIMEOUT` | 任意 | 接続のタイムアウト（秒、デフォルトは`15`）。 |
-| `PROXY_USERNAME` | 任意 | プロキシ認証のユーザー名。 |
-| `PROXY_PASSWORD` | 任意 | プロキシ認証のパスワード。 |
+| `PROXY_URL` | 任意 | プロキシ設定URL（例：`socks5://user:pass@host:port`）。 |
+
+### プロキシURL形式
+
+`PROXY_URL` 環境変数は以下の形式をサポートします：
+
+- **SOCKS4**: `socks4://username:password@host:port?timeout=15`
+- **SOCKS5**: `socks5://username:password@host:port?timeout=15`
+- **HTTP**: `http://username:password@host:port?timeout=15`
+- **MTProxy**: `mtproxy://secret@host:port?timeout=15`
+
+例：
+- `PROXY_URL=socks5://myuser:mypass@proxy.example.com:1080`
+- `PROXY_URL=mtproxy://secret123@mtproxy.example.com:443`
+- `PROXY_URL=socks5://proxy.example.com:1080?timeout=30` （認証なし）
 
 ```bash
 docker run -d --name telegram-search \

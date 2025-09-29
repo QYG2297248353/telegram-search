@@ -18,6 +18,7 @@ export interface RuntimeFlags {
   telegramApiHash?: string
 
   // Proxy configuration
+  proxyUrl?: string
   proxyIp?: string
   proxyPort?: number
   proxyMTProxy?: boolean
@@ -110,6 +111,7 @@ export function parseEnvFlags(env: Record<string, string | undefined>): RuntimeF
   assignIfPresent(result, 'telegramApiHash', readEnvValue('TELEGRAM_API_HASH', env))
 
   // Proxy configuration from environment variables
+  assignIfPresent(result, 'proxyUrl', readEnvValue('PROXY_URL', env))
   assignIfPresent(result, 'proxyIp', readEnvValue('PROXY_IP', env))
   const proxyPortValue = readIntegerEnv('PROXY_PORT', env)
   if (proxyPortValue !== undefined) {

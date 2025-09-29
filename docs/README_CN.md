@@ -76,14 +76,21 @@ docker run -d --name telegram-search \
 | `EMBEDDING_PROVIDER` | 选填 | 指定嵌入服务提供商（`openai` 或 `ollama`）。 |
 | `EMBEDDING_MODEL` | 选填 | 覆盖默认的嵌入模型名称。 |
 | `EMBEDDING_DIMENSION` | 选填 | 覆盖嵌入向量维度（如 `1536`、`1024`、`768`）。 |
-| `PROXY_IP` | 选填 | 代理主机（IP 或主机名）。 |
-| `PROXY_PORT` | 选填 | 代理端口。 |
-| `PROXY_MT_PROXY` | 选填 | 是否为 MTProxy（`true`/`false`）。 |
-| `PROXY_SECRET` | 选填 | MTProxy 密钥（如果使用 MTProxy）。 |
-| `PROXY_SOCKS_TYPE` | 选填 | SOCKS 类型（`4` 或 `5`，默认为 `5`）。 |
-| `PROXY_TIMEOUT` | 选填 | 连接超时时间（秒，默认为 `15`）。 |
-| `PROXY_USERNAME` | 选填 | 代理认证用户名。 |
-| `PROXY_PASSWORD` | 选填 | 代理认证密码。 |
+| `PROXY_URL` | 选填 | 代理配置 URL（如 `socks5://user:pass@host:port`）。 |
+
+### 代理 URL 格式
+
+`PROXY_URL` 环境变量支持以下格式：
+
+- **SOCKS4**: `socks4://username:password@host:port?timeout=15`
+- **SOCKS5**: `socks5://username:password@host:port?timeout=15`
+- **HTTP**: `http://username:password@host:port?timeout=15`
+- **MTProxy**: `mtproxy://secret@host:port?timeout=15`
+
+示例：
+- `PROXY_URL=socks5://myuser:mypass@proxy.example.com:1080`
+- `PROXY_URL=mtproxy://secret123@mtproxy.example.com:443`
+- `PROXY_URL=socks5://proxy.example.com:1080?timeout=30` （无认证）
 
 ```bash
 docker run -d --name telegram-search \

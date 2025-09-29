@@ -75,14 +75,21 @@ Set the following environment variables before starting the containerized servic
 | `EMBEDDING_PROVIDER` | optional | Override embedding provider (`openai` or `ollama`). |
 | `EMBEDDING_MODEL` | optional | Override embedding model name. |
 | `EMBEDDING_DIMENSION` | optional | Override embedding dimension (e.g. `1536`, `1024`, `768`). |
-| `PROXY_IP` | optional | Proxy host (IP or hostname). |
-| `PROXY_PORT` | optional | Proxy port. |
-| `PROXY_MT_PROXY` | optional | Whether it's an MTProxy (`true`/`false`). |
-| `PROXY_SECRET` | optional | MTProxy secret (if using MTProxy). |
-| `PROXY_SOCKS_TYPE` | optional | SOCKS type (`4` or `5`, default is `5`). |
-| `PROXY_TIMEOUT` | optional | Timeout (in seconds) for connection (default is `15`). |
-| `PROXY_USERNAME` | optional | Username for proxy authentication. |
-| `PROXY_PASSWORD` | optional | Password for proxy authentication. |
+| `PROXY_URL` | optional | Proxy configuration URL (e.g., `socks5://user:pass@host:port`). |
+
+### Proxy URL Format
+
+The `PROXY_URL` environment variable supports these formats:
+
+- **SOCKS4**: `socks4://username:password@host:port?timeout=15`
+- **SOCKS5**: `socks5://username:password@host:port?timeout=15`
+- **HTTP**: `http://username:password@host:port?timeout=15`
+- **MTProxy**: `mtproxy://secret@host:port?timeout=15`
+
+Examples:
+- `PROXY_URL=socks5://myuser:mypass@proxy.example.com:1080`
+- `PROXY_URL=mtproxy://secret123@mtproxy.example.com:443`
+- `PROXY_URL=socks5://proxy.example.com:1080?timeout=30` (no auth)
 
 ```bash
 docker run -d --name telegram-search \
