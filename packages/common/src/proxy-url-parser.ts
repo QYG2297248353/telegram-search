@@ -35,7 +35,7 @@ export function parseProxyUrl(proxyUrl: string): ProxyConfig | null {
     const host = url.hostname
     const port = Number.parseInt(url.port, 10)
 
-    if (!host || !port || isNaN(port)) {
+    if (!host || !port || Number.isNaN(port)) {
       return null
     }
 
@@ -48,7 +48,7 @@ export function parseProxyUrl(proxyUrl: string): ProxyConfig | null {
     const timeoutParam = url.searchParams.get('timeout')
     if (timeoutParam) {
       const timeout = Number.parseInt(timeoutParam, 10)
-      if (!isNaN(timeout) && timeout > 0) {
+      if (!Number.isNaN(timeout) && timeout > 0) {
         config.timeout = timeout
       }
     }
