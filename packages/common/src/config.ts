@@ -1,4 +1,4 @@
-import type { Config } from './config-schema'
+import type { Config, SocksType } from './config-schema'
 import type { RuntimeFlags } from './flags'
 
 import { useLogger } from '@unbird/logg'
@@ -80,36 +80,107 @@ function applyProxyOverrides(config: Config, flags?: RuntimeFlags): void {
   if (hasProxyFlags) {
     config.api = config.api || {}
     const currentTelegram = config.api.telegram || {}
-    const currentProxy = currentTelegram.proxy || {}
 
     // Build the new proxy configuration
-    const newProxyConfig = {
-      ...currentProxy,
-      ...(flags!.proxyIp !== undefined && { ip: flags!.proxyIp }),
-      ...(flags!.proxyPort !== undefined && { port: flags!.proxyPort }),
-      ...(flags!.proxyMTProxy !== undefined && { MTProxy: flags!.proxyMTProxy }),
-      ...(flags!.proxySecret !== undefined && { secret: flags!.proxySecret }),
-      ...(flags!.proxySocksType !== undefined && { socksType: flags!.proxySocksType }),
-      ...(flags!.proxyTimeout !== undefined && { timeout: flags!.proxyTimeout }),
-      ...(flags!.proxyUsername !== undefined && { username: flags!.proxyUsername }),
-      ...(flags!.proxyPassword !== undefined && { password: flags!.proxyPassword }),
+    // Only include fields that have actual values (not undefined)
+    const newProxyConfig: Record<string, any> = {}
+
+    if (flags!.proxyIp !== undefined) {
+      newProxyConfig.ip = flags!.proxyIp
+    }
+    else if (currentTelegram.proxy?.ip !== undefined) {
+      newProxyConfig.ip = currentTelegram.proxy.ip
+    }
+
+    if (flags!.proxyPort !== undefined) {
+      newProxyConfig.port = flags!.proxyPort
+    }
+    else if (currentTelegram.proxy?.port !== undefined) {
+      newProxyConfig.port = currentTelegram.proxy.port
+    }
+
+    if (flags!.proxyMTProxy !== undefined) {
+      newProxyConfig.MTProxy = flags!.proxyMTProxy
+    }
+    else if (currentTelegram.proxy?.MTProxy !== undefined) {
+      newProxyConfig.MTProxy = currentTelegram.proxy.MTProxy
+    }
+
+    if (flags!.proxySecret !== undefined) {
+      newProxyConfig.secret = flags!.proxySecret
+    }
+    else if (currentTelegram.proxy?.secret !== undefined) {
+      newProxyConfig.secret = currentTelegram.proxy.secret
+    }
+
+    if (flags!.proxySocksType !== undefined) {
+      newProxyConfig.socksType = flags!.proxySocksType
+    }
+    else if (currentTelegram.proxy?.socksType !== undefined) {
+      newProxyConfig.socksType = currentTelegram.proxy.socksType
+    }
+
+    if (flags!.proxyTimeout !== undefined) {
+      newProxyConfig.timeout = flags!.proxyTimeout
+    }
+    else if (currentTelegram.proxy?.timeout !== undefined) {
+      newProxyConfig.timeout = currentTelegram.proxy.timeout
+    }
+
+    if (flags!.proxyUsername !== undefined) {
+      newProxyConfig.username = flags!.proxyUsername
+    }
+    else if (currentTelegram.proxy?.username !== undefined) {
+      newProxyConfig.username = currentTelegram.proxy.username
+    }
+
+    if (flags!.proxyPassword !== undefined) {
+      newProxyConfig.password = flags!.proxyPassword
+    }
+    else if (currentTelegram.proxy?.password !== undefined) {
+      newProxyConfig.password = currentTelegram.proxy.password
     }
 
     // Only set the proxy configuration if it has actual values (not just defaults)
-    const hasActualProxyConfig
-      = (newProxyConfig.ip !== undefined && newProxyConfig.ip !== '')
-        || (newProxyConfig.port !== undefined && newProxyConfig.port !== 0)
-        || newProxyConfig.MTProxy
-        || (newProxyConfig.secret !== undefined && newProxyConfig.secret !== '')
-        || newProxyConfig.socksType !== undefined
-        || newProxyConfig.timeout !== undefined
-        || (newProxyConfig.username !== undefined && newProxyConfig.username !== '')
-        || (newProxyConfig.password !== undefined && newProxyConfig.password !== '')
+    // Both ip and port must be valid for the proxy to work
+    const hasValidProxyConfig = newProxyConfig.ip !== undefined
+      && newProxyConfig.ip !== ''
+      && newProxyConfig.port !== undefined
+      && newProxyConfig.port !== 0
 
-    if (hasActualProxyConfig) {
+    if (hasValidProxyConfig) {
+      // Create a properly typed proxy configuration object
+      const typedProxyConfig: {
+        ip: string
+        port: number
+        MTProxy?: boolean
+        secret?: string
+        socksType?: SocksType
+        timeout?: number
+        username?: string
+        password?: string
+      } = {
+        ip: newProxyConfig.ip,
+        port: newProxyConfig.port,
+      }
+
+      // Add optional properties only if they exist
+      if (newProxyConfig.MTProxy !== undefined)
+        typedProxyConfig.MTProxy = newProxyConfig.MTProxy
+      if (newProxyConfig.secret !== undefined)
+        typedProxyConfig.secret = newProxyConfig.secret
+      if (newProxyConfig.socksType !== undefined)
+        typedProxyConfig.socksType = newProxyConfig.socksType
+      if (newProxyConfig.timeout !== undefined)
+        typedProxyConfig.timeout = newProxyConfig.timeout
+      if (newProxyConfig.username !== undefined)
+        typedProxyConfig.username = newProxyConfig.username
+      if (newProxyConfig.password !== undefined)
+        typedProxyConfig.password = newProxyConfig.password
+
       config.api.telegram = {
         ...currentTelegram,
-        proxy: newProxyConfig,
+        proxy: typedProxyConfig,
       }
     }
   }
