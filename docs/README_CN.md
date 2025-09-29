@@ -76,6 +76,14 @@ docker run -d --name telegram-search \
 | `EMBEDDING_PROVIDER` | 选填 | 指定嵌入服务提供商（`openai` 或 `ollama`）。 |
 | `EMBEDDING_MODEL` | 选填 | 覆盖默认的嵌入模型名称。 |
 | `EMBEDDING_DIMENSION` | 选填 | 覆盖嵌入向量维度（如 `1536`、`1024`、`768`）。 |
+| `PROXY_IP` | 选填 | 代理主机（IP 或主机名）。 |
+| `PROXY_PORT` | 选填 | 代理端口。 |
+| `PROXY_MT_PROXY` | 选填 | 是否为 MTProxy（`true`/`false`）。 |
+| `PROXY_SECRET` | 选填 | MTProxy 密钥（如果使用 MTProxy）。 |
+| `PROXY_SOCKS_TYPE` | 选填 | SOCKS 类型（`4` 或 `5`，默认为 `5`）。 |
+| `PROXY_TIMEOUT` | 选填 | 连接超时时间（秒，默认为 `15`）。 |
+| `PROXY_USERNAME` | 选填 | 代理认证用户名。 |
+| `PROXY_PASSWORD` | 选填 | 代理认证密码。 |
 
 ```bash
 docker run -d --name telegram-search \

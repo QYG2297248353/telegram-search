@@ -75,6 +75,14 @@ Set the following environment variables before starting the containerized servic
 | `EMBEDDING_PROVIDER` | optional | Override embedding provider (`openai` or `ollama`). |
 | `EMBEDDING_MODEL` | optional | Override embedding model name. |
 | `EMBEDDING_DIMENSION` | optional | Override embedding dimension (e.g. `1536`, `1024`, `768`). |
+| `PROXY_IP` | optional | Proxy host (IP or hostname). |
+| `PROXY_PORT` | optional | Proxy port. |
+| `PROXY_MT_PROXY` | optional | Whether it's an MTProxy (`true`/`false`). |
+| `PROXY_SECRET` | optional | MTProxy secret (if using MTProxy). |
+| `PROXY_SOCKS_TYPE` | optional | SOCKS type (`4` or `5`, default is `5`). |
+| `PROXY_TIMEOUT` | optional | Timeout (in seconds) for connection (default is `15`). |
+| `PROXY_USERNAME` | optional | Username for proxy authentication. |
+| `PROXY_PASSWORD` | optional | Password for proxy authentication. |
 
 ```bash
 docker run -d --name telegram-search \
